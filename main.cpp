@@ -1,16 +1,17 @@
 #include <iostream>
+#include <cmath>
 
 // ax + by + c = 0
-int* lineA;
-int* lineB;
-int* lineC;
+double* lineA;
+double* lineB;
+double* lineC;
 char** lineNames;
 
 int lineLength;
 
 //point (x, y)
-int* pointX;
-int* pointY;
+double* pointX;
+double* pointY;
 char** pointNames;
 
 int pointLength;
@@ -45,6 +46,7 @@ void printMenu() {
     std::cout << "7. Create Line perpendicular to Line G and with crossing point Point P" << std::endl;
     std::cout << "8. Find 2 lines crossing point" << std::endl;
     std::cout << "9. Find Heights, medium and bisector from triangle created by 3 points" << std::endl;
+    std::cout << "A. Find tangent from parabola and a point" << std::endl;
     std::cout << "0. Exit" << std::endl;
 }
 
@@ -77,11 +79,11 @@ void addLine() {
     std::cout << "Enter line name: ";
     char* name = getValidName();
     std::cout << "Enter line coefficients: ";
-    int a, b, c;
+    double a, b, c;
     std::cin >> a >> b >> c;
-    int* tempLineA = new int[lineLength + 1];
-    int* tempLineB = new int[lineLength + 1];
-    int* tempLineC = new int[lineLength + 1];
+    double* tempLineA = new double[lineLength + 1];
+    double* tempLineB = new double[lineLength + 1];
+    double* tempLineC = new double[lineLength + 1];
     char** tempLineName = new char*[lineLength + 1];
     for (int i = 0; i < lineLength; i++) {
         tempLineA[i] = lineA[i];
@@ -110,10 +112,10 @@ void addPoint() {
     std::cout << "Enter point name: ";
     char* name = getValidName();
     std::cout << "Enter point coordinates: ";
-    int x, y;
+    double x, y;
     std::cin >> x >> y;
-    int* tempPointX = new int[pointLength + 1];
-    int* tempPointY = new int[pointLength + 1];
+    double* tempPointX = new double[pointLength + 1];
+    double* tempPointY = new double[pointLength + 1];
     char** tempPointName = new char*[pointLength + 1];
     for (int i = 0; i < pointLength; i++) {
         tempPointX[i] = pointX[i];
@@ -393,6 +395,44 @@ void triangleLinesFromThreePoints() {
 
 }
 
+void tangentFromParabolaAndPoint() {
+    std::cout << "Enter parabola equation: y = ax^2 + bx + c" << std::endl;
+    double a, b, c;
+    std::cout << "a = ";
+    std::cin >> a;
+    std::cout << std::endl;
+    std::cout << "b = ";
+    std::cin >> b;
+    std::cout << std::endl;
+    std::cout << "c = ";
+    std::cin >> c;
+    std::cout << std::endl;
+    std::cout << "Enter point coordinates: (x, 0)" << std::endl;
+    double x;
+    std::cout << "x = ";
+    std::cin >> x;
+    std::cout << std::endl;
+
+    // tangent line equation: y = kx + b
+    // 0 = (2ax + b) * (x0) + ax^2 + bx + c
+    // 0 = ax^2 + (2ax0 + b)x + (bx0 + c)
+    // D = (2ax0 + b)^2 - 4 * a * (bx0 + c) = (2ax0)^2 + 4abx0 + b^2 - 4abx0 - 4ac = (2ax0)^2 + b^2 - 4ac
+
+    double D = (2 * a * x) * (2 * a * x) + b * b - 4 * a * c;
+    double x1 = (-2 * a * x - b + std::sqrt(D)) / (2 * a);
+    double x2 = (-2 * a * x - b - std::sqrt(D)) / (2 * a);
+    double y1 = a * x1 * x1 + b * x1 + c;
+    double y2 = a * x2 * x2 + b * x2 + c;
+
+    //two points to line equation from x1, y1, x2, y2
+    // (y2 - y1) * x + (x1 - x2) * y + (x2 * y1 - x1 * y2) = 0
+    // line from ( x, 0) to (x1, y1)
+    std::cout << "Tangent line equation: " << (y1) << "x + " << (x - x1) << "y + " << (- x * y1) << " = 0" << std::endl;
+    //line from ( x, 0) to (x2, y2)
+    std::cout << "Tangent line equation: " << (y2) << "x + " << (x - x2) << "y + " << (- x * y2) << " = 0" << std::endl;
+
+}
+
 // core functions
 void handleCommand(char input) {
     switch (input) {
@@ -422,6 +462,9 @@ void handleCommand(char input) {
             break;
         case '9':
             triangleLinesFromThreePoints();
+            break;
+        case 'A':
+            tangentFromParabolaAndPoint();
             break;
 
         case '0':
