@@ -47,6 +47,7 @@ void printMenu() {
     std::cout << "8. Find 2 lines crossing point" << std::endl;
     std::cout << "9. Find Heights, medium and bisector from triangle created by 3 points" << std::endl;
     std::cout << "A. Find tangent from parabola and a point" << std::endl;
+    std::cout << "B. Find crossing points of parabola and a line" << std::endl;
     std::cout << "0. Exit" << std::endl;
 }
 
@@ -431,6 +432,45 @@ void tangentFromParabolaAndPoint() {
     //line from ( x, 0) to (x2, y2)
     std::cout << "Tangent line equation: " << (y2) << "x + " << (x - x2) << "y + " << (- x * y2) << " = 0" << std::endl;
 
+    operationEnd();
+}
+
+void crossingPointsParabolaAndLine() {
+    std::cout << "Enter parabola equation: y = ax^2 + bx + c" << std::endl;
+    double pA, pB, pC;
+    std::cout << "a = ";
+    std::cin >> pA;
+    std::cout << std::endl;
+    std::cout << "b = ";
+    std::cin >> pB;
+    std::cout << std::endl;
+    std::cout << "c = ";
+    std::cin >> pC;
+    std::cout << std::endl;
+    std::cout << "Enter line equation: y = kx + d" << std::endl;
+    double lK, lD;
+    std::cout << "k = ";
+    std::cin >> lK;
+    std::cout << std::endl;
+    std::cout << "d = ";
+    std::cin >> lD;
+    std::cout << std::endl;
+
+    // line equation: y = kx + d
+    // parabola equation: y = ax^2 + bx + c
+    // 0 = ax^2 + (b - k)x + (c - d)
+    double D = (pB - lK) * (pB - lK) - 4 * pA * (pC - lD);
+    double x1 = (-pB + lK + std::sqrt(D)) / (2 * pA);
+    double x2 = (-pB + lK - std::sqrt(D)) / (2 * pA);
+    double y1 = lK * x1 + lD;
+    double y2 = lK * x2 + lD;
+
+    if (x1 != x2)
+        std::cout << "Crossing points: (" << x1 << ", " << y1 << ") and (" << x2 << ", " << y2 << ")" << std::endl;
+    else
+        std::cout << "Crossing point: (" << x1 << ", " << y1 << ")" << std::endl;
+
+    operationEnd();
 }
 
 // core functions
@@ -466,7 +506,9 @@ void handleCommand(char input) {
         case 'A':
             tangentFromParabolaAndPoint();
             break;
-
+        case 'B':
+            crossingPointsParabolaAndLine();
+            break;
         case '0':
             running = false;
             break;
