@@ -33,6 +33,15 @@ int strcmp(char *string, char *name) {
     return string[i] - name[i];
 }
 
+void printLine(int index) {
+    std::cout << lineNames[index] << ": " << lineA[index] << "x" << (lineB[index] < 0 ? " ": " + ") << lineB[index] << "y" << (lineC[index] < 0 ? " ": " + ") << lineC[index] << " = 0"
+              << std::endl;
+}
+
+void printPoint(int index) {
+    std::cout << pointNames[index] << ": (" << pointX[index] << ", " << pointY[index] << ")" << std::endl;
+}
+
 
 //menu helper functions
 void printMenu() {
@@ -61,8 +70,14 @@ char getCommand() {
 }
 
 void operationEnd() {
+    std::cin.ignore();
     std::cout << "Press Enter to continue..." << std::endl;
-    std::cin.get();
+    std::cin.ignore();
+//#ifdef _WIN32
+//    system("cls");
+//#else
+//    system("clear");
+//#endif
 }
 
 
@@ -83,9 +98,14 @@ char *getValidName() {
 void addLine() {
     std::cout << "Enter line name: ";
     char *name = getValidName();
-    std::cout << "Enter line coefficients: ";
+    std::cout <<  "Enter line coefficients ( ax + by + c = 0): " << std::endl;
     double a, b, c;
-    std::cin >> a >> b >> c;
+    std::cout << "a = ";
+    std::cin >> a;
+    std::cout << "b = ";
+    std::cin >> b;
+    std::cout << "c = ";
+    std::cin >> c;
     double *tempLineA = new double[lineLength + 1];
     double *tempLineB = new double[lineLength + 1];
     double *tempLineC = new double[lineLength + 1];
@@ -111,14 +131,18 @@ void addLine() {
     lineB = tempLineB;
     lineC = tempLineC;
     lineNames = tempLineName;
+    printLine(lineLength - 1);
 }
 
 void addPoint() {
     std::cout << "Enter point name: ";
     char *name = getValidName();
-    std::cout << "Enter point coordinates: ";
+    std::cout << std::endl << "Enter point coordinates ( x, y): " << std::endl;
     double x, y;
-    std::cin >> x >> y;
+    std::cout << "x: ";
+    std::cin >> x;
+    std::cout << "y: ";
+    std::cin >> y;
     double *tempPointX = new double[pointLength + 1];
     double *tempPointY = new double[pointLength + 1];
     char **tempPointName = new char *[pointLength + 1];
@@ -140,21 +164,14 @@ void addPoint() {
     pointY = tempPointY;
     pointNames = tempPointName;
 
+    printPoint(pointLength - 1);
 }
 
-void printLine(int index) {
-    std::cout << lineNames[index] << ": " << lineA[index] << "x + " << lineB[index] << "y + " << lineC[index] << " = 0"
-              << std::endl;
-}
 
 void printLines() {
     for (int i = 0; i < lineLength; i++) {
         printLine(i);
     }
-}
-
-void printPoint(int index) {
-    std::cout << pointNames[index] << ": (" << pointX[index] << ", " << pointY[index] << ")" << std::endl;
 }
 
 void printPoints() {
@@ -193,48 +210,48 @@ bool isLying(int lineIndex, int pointIndex) {
 void isLying() {
     if (pointLength == 0 || lineLength == 0) {
         std::cout << "No points or lines!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     int pointIndex = findPoint();
     if (pointIndex == -1) {
         std::cout << "Point not found!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     int lineIndex = findLine();
     if (lineIndex == -1) {
         std::cout << "Line not found!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     printLine(lineIndex);
     printPoint(pointIndex);
     std::cout << "Result: " << (isLying(lineIndex, pointIndex) ? "true" : "false") << std::endl;
-    operationEnd();
+
 }
 
 void createLineFromPointAndLine() {
     if (pointLength == 0 || lineLength == 0) {
         std::cout << "No points or lines!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     int pointIndex = findPoint();
     if (pointIndex == -1) {
         std::cout << "Point not found!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     int lineIndex = findLine();
     if (lineIndex == -1) {
         std::cout << "Line not found!" << std::endl;
-        operationEnd();
+
         return;
     }
 
@@ -247,33 +264,33 @@ void createLineFromPointAndLine() {
     printPoint(pointIndex);
     std::cout << "Result: " << lineA[lineIndex] << "x + " << lineB[lineIndex] << "y + "
               << -lineA[lineIndex] * pointX[pointIndex] - lineB[lineIndex] * pointY[pointIndex] << " = 0" << std::endl;
-    operationEnd();
+
 }
 
 void createLineFromPerpendicularLineAndCrossingPoint() {
     if (pointLength == 0 || lineLength == 0) {
         std::cout << "No points or lines!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     int pointIndex = findPoint();
     if (pointIndex == -1) {
         std::cout << "Point not found!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     int lineIndex = findLine();
     if (lineIndex == -1) {
         std::cout << "Line not found!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     if (!isLying(lineIndex, pointIndex)) {
         std::cout << "Point is not lying on the line!" << std::endl;
-        operationEnd();
+
         return;
     }
 
@@ -281,34 +298,34 @@ void createLineFromPerpendicularLineAndCrossingPoint() {
     printPoint(pointIndex);
     std::cout << "Result: " << -lineB[lineIndex] << "x + " << lineA[lineIndex] << "y + "
               << (lineB[lineIndex] * pointX[pointIndex] - lineA[lineIndex] * pointY[pointIndex]) << " = 0" << std::endl;
-    operationEnd();
+
 }
 
 void twoLinesIntersection() {
     if (lineLength < 2) {
         std::cout << "Not enough lines!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     int lineIndex1 = findLine();
     if (lineIndex1 == -1) {
         std::cout << "Line not found!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     int lineIndex2 = findLine();
     if (lineIndex2 == -1) {
         std::cout << "Line not found!" << std::endl;
-        operationEnd();
+
         return;
     }
 
     //if lines are parallel
     if (lineA[lineIndex1] * lineB[lineIndex2] == lineA[lineIndex2] * lineB[lineIndex1]) {
         std::cout << "Lines are parallel!" << std::endl;
-        operationEnd();
+
         return;
     }
 
@@ -323,35 +340,31 @@ void twoLinesIntersection() {
               << ", " << (lineA[lineIndex2] * lineC[lineIndex1] - lineA[lineIndex1] * lineC[lineIndex2]) /
                          (lineA[lineIndex1] * lineB[lineIndex2] - lineA[lineIndex2] * lineB[lineIndex1]) << ')'
               << std::endl;
-    operationEnd();
+
 
 }
 
 void triangleLinesFromThreePoints() {
     if (pointLength < 3) {
         std::cout << "Not enough points!" << std::endl;
-        operationEnd();
         return;
     }
 
     int pointIndex1 = findPoint();
     if (pointIndex1 == -1) {
         std::cout << "Point not found!" << std::endl;
-        operationEnd();
         return;
     }
 
     int pointIndex2 = findPoint();
     if (pointIndex2 == -1) {
         std::cout << "Point not found!" << std::endl;
-        operationEnd();
         return;
     }
 
     int pointIndex3 = findPoint();
     if (pointIndex3 == -1) {
         std::cout << "Point not found!" << std::endl;
-        operationEnd();
         return;
     }
 
@@ -399,15 +412,15 @@ void triangleLinesFromThreePoints() {
     // AN: (( y2 + y3 ) / 2 - y1) * x + (x1 - ( x2 + x3 ) / 2) * y + ( ( x2 + x3 ) / 2 * y1 - x1 * ( y2 + y3 ) / 2) = 0
     // BP: (( y3 + y1 ) / 2 - y2) * x + (x2 - ( x3 + x1 ) / 2) * y + ( ( x3 + x1 ) / 2 * y2 - x2 * ( y3 + y1 ) / 2) = 0
     // CM: (( y1 + y2 ) / 2 - y3) * x + (x3 - ( x1 + x2 ) / 2) * y + ( ( x1 + x2 ) / 2 * y3 - x3 * ( y1 + y2 ) / 2) = 0
-    std::cout << "Median from A to BC" << ((pointY[pointIndex2] + pointY[pointIndex3]) / 2 - pointY[pointIndex1])
+    std::cout << "Median from A to BC: " << ((pointY[pointIndex2] + pointY[pointIndex3]) / 2 - pointY[pointIndex1])
               << "x + " << (pointX[pointIndex1] - (pointX[pointIndex2] + pointX[pointIndex3]) / 2) << "y + "
               << ((pointX[pointIndex2] + pointX[pointIndex3]) / 2 * pointY[pointIndex1] -
                   pointX[pointIndex1] * (pointY[pointIndex2] + pointY[pointIndex3]) / 2) << " = 0" << std::endl;
-    std::cout << "Median from B to CA" << ((pointY[pointIndex3] + pointY[pointIndex1]) / 2 - pointY[pointIndex2])
+    std::cout << "Median from B to CA: " << ((pointY[pointIndex3] + pointY[pointIndex1]) / 2 - pointY[pointIndex2])
               << "x + " << (pointX[pointIndex2] - (pointX[pointIndex3] + pointX[pointIndex1]) / 2) << "y + "
               << ((pointX[pointIndex3] + pointX[pointIndex1]) / 2 * pointY[pointIndex2] -
                   pointX[pointIndex2] * (pointY[pointIndex3] + pointY[pointIndex1]) / 2) << " = 0" << std::endl;
-    std::cout << "Median from C to AB" << ((pointY[pointIndex1] + pointY[pointIndex2]) / 2 - pointY[pointIndex3])
+    std::cout << "Median from C to AB: " << ((pointY[pointIndex1] + pointY[pointIndex2]) / 2 - pointY[pointIndex3])
               << "x + " << (pointX[pointIndex3] - (pointX[pointIndex1] + pointX[pointIndex2]) / 2) << "y + "
               << ((pointX[pointIndex1] + pointX[pointIndex2]) / 2 * pointY[pointIndex3] -
                   pointX[pointIndex3] * (pointY[pointIndex1] + pointY[pointIndex2]) / 2) << " = 0" << std::endl;
@@ -418,17 +431,17 @@ void triangleLinesFromThreePoints() {
     // sAB: 2 * (x1 - x2) * x + 2 * (y1 - y2) * y + x1^2 - x2^2 + y1^2 - y2^2 = 0
     // sBC: 2 * (x2 - x3) * x + 2 * (y2 - y3) * y + x2^2 - x3^2 + y2^2 - y3^2 = 0
     // sCA: 2 * (x3 - x1) * x + 2 * (y3 - y1) * y + x3^2 - x1^2 + y3^2 - y1^2 = 0
-    std::cout << "Perpendicular bisector of AB" << (2 * (pointX[pointIndex1] - pointX[pointIndex2])) << "x + "
+    std::cout << "Perpendicular bisector of AB: " << (2 * (pointX[pointIndex1] - pointX[pointIndex2])) << "x + "
               << (2 * (pointY[pointIndex1] - pointY[pointIndex2])) << "y + "
               << (pointX[pointIndex1] * pointX[pointIndex1] - pointX[pointIndex2] * pointX[pointIndex2] +
                   pointY[pointIndex1] * pointY[pointIndex1] - pointY[pointIndex2] * pointY[pointIndex2]) << " = 0"
               << std::endl;
-    std::cout << "Perpendicular bisector of BC" << (2 * (pointX[pointIndex2] - pointX[pointIndex3])) << "x + "
+    std::cout << "Perpendicular bisector of BC: " << (2 * (pointX[pointIndex2] - pointX[pointIndex3])) << "x + "
               << (2 * (pointY[pointIndex2] - pointY[pointIndex3])) << "y + "
               << (pointX[pointIndex2] * pointX[pointIndex2] - pointX[pointIndex3] * pointX[pointIndex3] +
                   pointY[pointIndex2] * pointY[pointIndex2] - pointY[pointIndex3] * pointY[pointIndex3]) << " = 0"
               << std::endl;
-    std::cout << "Perpendicular bisector of CA" << (2 * (pointX[pointIndex3] - pointX[pointIndex1])) << "x + "
+    std::cout << "Perpendicular bisector of CA: " << (2 * (pointX[pointIndex3] - pointX[pointIndex1])) << "x + "
               << (2 * (pointY[pointIndex3] - pointY[pointIndex1])) << "y + "
               << (pointX[pointIndex3] * pointX[pointIndex3] - pointX[pointIndex1] * pointX[pointIndex1] +
                   pointY[pointIndex3] * pointY[pointIndex3] - pointY[pointIndex1] * pointY[pointIndex1]) << " = 0"
@@ -442,27 +455,27 @@ void tangentFromParabolaAndPoint() {
     double a, b, c;
     std::cout << "a = ";
     std::cin >> a;
-    std::cout << std::endl;
     std::cout << "b = ";
     std::cin >> b;
-    std::cout << std::endl;
     std::cout << "c = ";
     std::cin >> c;
-    std::cout << std::endl;
     std::cout << "Enter point coordinates: (x, 0)" << std::endl;
     double x;
     std::cout << "x = ";
     std::cin >> x;
-    std::cout << std::endl;
 
-    // tangent line equation: y = kx + b
-    // 0 = (2ax + b) * (x0) + ax^2 + bx + c
-    // 0 = ax^2 + (2ax0 + b)x + (bx0 + c)
-    // D = (2ax0 + b)^2 - 4 * a * (bx0 + c) = (2ax0)^2 + 4abx0 + b^2 - 4abx0 - 4ac = (2ax0)^2 + b^2 - 4ac
+    // tangent line equation: y = kx + d
+    // 0 = (2ax + b) * (x0) + c - ax^2
+    // 0 = -ax^2 + 2a(x0)x + b(x0) + c
+    // D = (a(x0))^2 + a * (c + b(x0))
 
-    double D = (2 * a * x) * (2 * a * x) + b * b - 4 * a * c;
-    double x1 = (-2 * a * x - b + std::sqrt(D)) / (2 * a);
-    double x2 = (-2 * a * x - b - std::sqrt(D)) / (2 * a);
+    double D = (a * x) * (a * x) + a * (c + b * x);
+    if (D < 0){
+        std::cout << "No tangent line" << std::endl;
+        return;
+    }
+    double x1 = (- a * x - b + std::sqrt(D)) / (- a);
+    double x2 = (- a * x - b - std::sqrt(D)) / (- a);
     double y1 = a * x1 * x1 + b * x1 + c;
     double y2 = a * x2 * x2 + b * x2 + c;
 
@@ -473,7 +486,7 @@ void tangentFromParabolaAndPoint() {
     //line from ( x, 0) to (x2, y2)
     std::cout << "Tangent line equation: " << (y2) << "x + " << (x - x2) << "y + " << (-x * y2) << " = 0" << std::endl;
 
-    operationEnd();
+
 }
 
 void crossingPointsParabolaAndLine() {
@@ -481,26 +494,25 @@ void crossingPointsParabolaAndLine() {
     double pA, pB, pC;
     std::cout << "a = ";
     std::cin >> pA;
-    std::cout << std::endl;
     std::cout << "b = ";
     std::cin >> pB;
-    std::cout << std::endl;
     std::cout << "c = ";
     std::cin >> pC;
-    std::cout << std::endl;
     std::cout << "Enter line equation: y = kx + d" << std::endl;
     double lK, lD;
     std::cout << "k = ";
     std::cin >> lK;
-    std::cout << std::endl;
     std::cout << "d = ";
     std::cin >> lD;
-    std::cout << std::endl;
 
     // line equation: y = kx + d
     // parabola equation: y = ax^2 + bx + c
     // 0 = ax^2 + (b - k)x + (c - d)
     double D = (pB - lK) * (pB - lK) - 4 * pA * (pC - lD);
+    if (D < 0){
+        std::cout << "No crossing points" << std::endl;
+        return;
+    }
     double x1 = (-pB + lK + std::sqrt(D)) / (2 * pA);
     double x2 = (-pB + lK - std::sqrt(D)) / (2 * pA);
     double y1 = lK * x1 + lD;
@@ -511,19 +523,16 @@ void crossingPointsParabolaAndLine() {
     else
         std::cout << "Crossing point: (" << x1 << ", " << y1 << ")" << std::endl;
 
-    operationEnd();
+
 }
 
 void getLineCoordinates(double &a, double &b, double &c) {
     std::cout << "a = ";
     std::cin >> a;
-    std::cout << std::endl;
     std::cout << "b = ";
     std::cin >> b;
-    std::cout << std::endl;
     std::cout << "c = ";
     std::cin >> c;
-    std::cout << std::endl;
 }
 
 bool isSame(double a1, double b1, double c1, double a2, double b2, double c2) {
@@ -544,7 +553,7 @@ bool isSame(double a[4], double b[4], double c[4]) {
 }
 
 bool isParallel(const double a[4], const double b[4], int i, int j) {
-    return a[i] / a[j] == b[i] / b[j];
+    return a[i] * b[j] == b[i] * a[j];
 }
 
 void quadrilateralType() {
@@ -596,7 +605,7 @@ void quadrilateralType() {
         std::cout << "Quadrilateral" << std::endl;
     }
 
-    if ((isParallel(a, b, 0, 2) && !isParallel(a, b, 1, 3)) ||(!isParallel(a, b, 0, 2) && isParallel(a, b, 1, 3))) {
+    if ((isParallel(a, b, 0, 2) && !isParallel(a, b, 1, 3)) || (!isParallel(a, b, 0, 2) && isParallel(a, b, 1, 3))) {
         std::cout << "Trapezoid" << std::endl;
         return;
     }
@@ -680,6 +689,7 @@ void gameLoop() {
         printMenu();
         char input = getCommand();
         handleCommand(input);
+        operationEnd();
     }
 }
 
