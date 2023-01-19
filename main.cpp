@@ -34,7 +34,8 @@ int strcmp(char *string, char *name) {
 }
 
 void printLine(int index) {
-    std::cout << lineNames[index] << ": " << lineA[index] << "x" << (lineB[index] < 0 ? " ": " + ") << lineB[index] << "y" << (lineC[index] < 0 ? " ": " + ") << lineC[index] << " = 0"
+    std::cout << lineNames[index] << ": " << lineA[index] << "x" << (lineB[index] < 0 ? " " : " + ") << lineB[index]
+              << "y" << (lineC[index] < 0 ? " " : " + ") << lineC[index] << " = 0"
               << std::endl;
 }
 
@@ -98,7 +99,7 @@ char *getValidName() {
 void addLine() {
     std::cout << "Enter line name: ";
     char *name = getValidName();
-    std::cout <<  "Enter line coefficients ( ax + by + c = 0): " << std::endl;
+    std::cout << "Enter line coefficients ( ax + by + c = 0): " << std::endl;
     double a, b, c;
     std::cout << "a = ";
     std::cin >> a;
@@ -470,12 +471,12 @@ void tangentFromParabolaAndPoint() {
     // D = (a(x0))^2 + a * (c + b(x0))
 
     double D = (a * x) * (a * x) + a * (c + b * x);
-    if (D < 0){
+    if (D < 0) {
         std::cout << "No tangent line" << std::endl;
         return;
     }
-    double x1 = (- a * x - b + std::sqrt(D)) / (- a);
-    double x2 = (- a * x - b - std::sqrt(D)) / (- a);
+    double x1 = (-a * x - b + std::sqrt(D)) / (-a);
+    double x2 = (-a * x - b - std::sqrt(D)) / (-a);
     double y1 = a * x1 * x1 + b * x1 + c;
     double y2 = a * x2 * x2 + b * x2 + c;
 
@@ -509,7 +510,7 @@ void crossingPointsParabolaAndLine() {
     // parabola equation: y = ax^2 + bx + c
     // 0 = ax^2 + (b - k)x + (c - d)
     double D = (pB - lK) * (pB - lK) - 4 * pA * (pC - lD);
-    if (D < 0){
+    if (D < 0) {
         std::cout << "No crossing points" << std::endl;
         return;
     }
