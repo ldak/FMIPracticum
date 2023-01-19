@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project # 3
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2022/2023
+*
+* @author Milen Valev
+* @idnumber 0MI0600178
+* @compiler GCC
+*
+* Geometry tool main file
+*
+*/
+
 #include <iostream>
 #include <cmath>
 
@@ -74,11 +89,6 @@ void operationEnd() {
     std::cin.ignore();
     std::cout << "Press Enter to continue..." << std::endl;
     std::cin.ignore();
-//#ifdef _WIN32
-//    system("cls");
-//#else
-//    system("clear");
-//#endif
 }
 
 
@@ -89,7 +99,7 @@ char *getValidName() {
     for (int i = 0; name[i] != '\0'; ++i) {
         if (!(name[i] >= 'a' && name[i] <= 'z') && !(name[i] >= 'A' && name[i] <= 'Z') &&
             !(name[i] >= '0' && name[i] <= '9') && name[i] != '_') {
-            std::cout << "Invalid name! Try again: ";
+            std::cout << "Invalid name! \nTry again: ";
             return getValidName();
         }
     }
@@ -447,8 +457,6 @@ void triangleLinesFromThreePoints() {
               << (pointX[pointIndex3] * pointX[pointIndex3] - pointX[pointIndex1] * pointX[pointIndex1] +
                   pointY[pointIndex3] * pointY[pointIndex3] - pointY[pointIndex1] * pointY[pointIndex1]) << " = 0"
               << std::endl;
-
-
 }
 
 void tangentFromParabolaAndPoint() {
@@ -460,6 +468,12 @@ void tangentFromParabolaAndPoint() {
     std::cin >> b;
     std::cout << "c = ";
     std::cin >> c;
+
+    if (a == 0) {
+        std::cout << "It is not a parabola" << std::endl;
+        return;
+    }
+
     std::cout << "Enter point coordinates: (x, 0)" << std::endl;
     double x;
     std::cout << "x = ";
@@ -499,6 +513,12 @@ void crossingPointsParabolaAndLine() {
     std::cin >> pB;
     std::cout << "c = ";
     std::cin >> pC;
+
+    if (pA == 0) {
+        std::cout << "It is not a parabola" << std::endl;
+        return;
+    }
+
     std::cout << "Enter line equation: y = kx + d" << std::endl;
     double lK, lD;
     std::cout << "k = ";
@@ -524,7 +544,6 @@ void crossingPointsParabolaAndLine() {
     else
         std::cout << "Crossing point: (" << x1 << ", " << y1 << ")" << std::endl;
 
-
 }
 
 void getLineCoordinates(double &a, double &b, double &c) {
@@ -548,7 +567,6 @@ bool isSame(double a[4], double b[4], double c[4]) {
                 return true;
         }
     }
-
 
     return false;
 }
@@ -682,10 +700,9 @@ void handleCommand(char input) {
         default:
             std::cout << "Invalid command" << std::endl;
     }
-
 }
 
-void gameLoop() {
+void programLoop() {
     while (running) {
         printMenu();
         char input = getCommand();
@@ -695,6 +712,6 @@ void gameLoop() {
 }
 
 int main() {
-    gameLoop();
+    programLoop();
     return 0;
 }
